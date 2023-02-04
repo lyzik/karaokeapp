@@ -38,3 +38,12 @@ export const search = async (refresh_token : any, endpoint: string ) => {
     },
   })
 }
+
+export const getTrack = async (refresh_token : any, endpoint: string ) => {
+  const {access_token} = await getAccessToken(refresh_token);
+  return fetch(endpoint, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  })
+}
