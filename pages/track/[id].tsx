@@ -9,13 +9,14 @@ const SongData = () => {
     const [fetched, setFetched] = useState(false)
 
     useEffect(() => {
-        //fetch(lyricsFinder("poets of fall", "carnival of rust"))
-        //.then(res => res.json())
-        //.then(data => setLyrics(data))
-        //.then(() => console.log(lyrics))
-    }, [])
+        if(fetched){
+        fetch(`http://localhost:3000/api/lyrics?artist=${trackData.artists[0].name}&title=${trackData.name}`)
+        .then(res => res.json())
+        .then(data => setLyrics(data.split('\n')))
+        .then(() => console.log(lyrics))
+        }
+    }, [trackData, id])
 
-    // useFetch
     useEffect(() => {
         if(!fetched){
         fetch(`/api/track?q=${id}`)
@@ -26,19 +27,13 @@ const SongData = () => {
         }
     }, [trackData, id]);
 
-    
-    const lyricsFinder = require('lyrics-finder');
-    // (async function(artist, title) {
-    //     let lyrics = await lyricsFinder(artist, title) || "Not Found!";
-    //     console.log(lyrics);
-    // })("poets of fall", "carnival of rust");
-
-
-
     return fetched ? 
     <>
         <h1>{trackData.name}</h1> 
         <h2>{trackData.artists[0].name}</h2>
+        {lyrics ? lyrics.map((el : any) => (
+            <p>{el}</p>
+        )) : null}
     </>
     : null
 }

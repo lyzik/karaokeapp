@@ -3,6 +3,8 @@ const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 const PLAYLISTS_ENDPOINT = 'https://api.spotify.com/v1/me/playlists';
+const lyricsFinder = require('lyrics-finder');
+
 
 export const getAccessToken = async (refresh_token: any) => {
     const response = await fetch(TOKEN_ENDPOINT, {
@@ -46,4 +48,9 @@ export const getTrack = async (refresh_token : any, endpoint: string ) => {
       Authorization: `Bearer ${access_token}`,
     },
   })
+}
+
+export const getLyrics = async (artist : any, track : any) => {
+  let lyrics = await lyricsFinder(artist, track) || "Not Found!";
+  return lyrics;
 }
