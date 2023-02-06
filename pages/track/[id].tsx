@@ -1,3 +1,5 @@
+import { Player } from "@/components/Player/Player";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 
@@ -13,7 +15,6 @@ const SongData = () => {
         fetch(`http://localhost:3000/api/lyrics?artist=${trackData.artists[0].name}&title=${trackData.name}`)
         .then(res => res.json())
         .then(data => setLyrics(data.split('\n')))
-        .then(() => console.log(lyrics))
         }
     }, [trackData, id])
 
@@ -22,7 +23,6 @@ const SongData = () => {
         fetch(`/api/track?q=${id}`)
             .then(res => res.json())
             .then(data => setTrackData(data))
-            .then(data => console.log(trackData))
             .then(() => trackData !== undefined ? setFetched(true) : null)
         }
     }, [trackData, id]);
@@ -34,6 +34,8 @@ const SongData = () => {
         {lyrics ? lyrics.map((el : any) => (
             <p>{el}</p>
         )) : null}
+
+        <Player song={trackData.uri}/>
     </>
     : null
 }

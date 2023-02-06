@@ -22,7 +22,6 @@ const Search = () => {
     fetch(`/api/search?q=${input}`)
     .then(res => res.json())
     .then(data => setTracks(data))
-    .then(() => console.log(tracks))
   }, [input]);
 
   const handleChange = (event: any) => {
