@@ -13,6 +13,7 @@
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
+    "dotenv": "^16.0.3",
     "lyrics-finder": "^21.7.0",
     "next": "13.1.5",
     "next-auth": "^4.18.10",
