@@ -43,7 +43,7 @@ const Search = () => {
           {tracks.tracks ? tracks.tracks.items.map((el: any) => (
             <>
               <div className="track" key={el.id}>
-                <img src={el.album.images[0].url} alt="" />
+                <img src={el.album.images[0].url} alt="" onClick={() => {router.push(`/track/${el.id}`); () => playPreview("")}} />
                 <Link href={`/track/${el.id}`} onClick={() => playPreview("")} className="link" style={{textDecoration: "none"}}>
                   <p className="track-name">{el.name}</p>
                   <p className="artist">{el.artists[0].name}</p>
@@ -100,7 +100,12 @@ const Search = () => {
           padding: 15px;
           margin: 10px;
           align-items: left;
+          transition: 0.2s;
           border-radius: 15px;
+        }
+        .track:hover{
+          background-color: rgba(0, 0, 0, 0.3);
+          transition: 0.2s;
         }
         p{
           color: white;

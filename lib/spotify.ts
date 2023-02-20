@@ -1,6 +1,5 @@
-import Cookies from "js-cookie";
-const client_id : any  = process.env.SPOTIFY_CLIENT_ID;
-const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+const client_id : any  = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
 const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 const lyricsFinder = require('lyrics-finder');

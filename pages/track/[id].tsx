@@ -3,14 +3,27 @@ import { Player } from "@/components/Player/Player";
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 
+
 const SongData = () => {
     const router = useRouter()
     const [trackData, setTrackData] : any = useState()
     const [lyrics, setLyrics] : any = useState();
     const {id} = router.query
     const [fetched, setFetched] = useState(false)
+    const [position, setPosition] : any = useState(2400)
+    const [isPlaying, setIsPlaying] : any = useState()
 
-    
+
+    useEffect(() => {
+        if(isPlaying){
+            const intervalId = setInterval(() => {
+            console.log();
+            setPosition(position - 1,14);
+            }, 10);
+            
+            return () => clearInterval(intervalId);
+        }
+      }, [position, isPlaying]);
 
     useEffect(() => {
         if(fetched){
@@ -25,16 +38,47 @@ const SongData = () => {
         }
     }, [trackData, id])
 
-    return fetched ? 
+    return fetched && trackData ? 
     <>
         <Header />
         <h1>{trackData.name}</h1> 
         <h2>{trackData.artists[0].name}</h2>
-        {lyrics ? lyrics.map((el : any) => (
-            <p>{el}</p>
-        )) : null}
+        <div className="lyrics">
+            {lyrics ? lyrics.map((el : any) => (
+                <p>{el}</p>
+            )) : null}
+        </div>
 
-        <Player song={trackData.uri}/>
+        <div className="player">
+            <Player song={trackData.uri} setPlay={setIsPlaying}/>
+        </div>
+        
+        <style jsx>{`
+          h1{
+            color: white;
+          } 
+          h2{
+            color: gray;
+          } 
+          p{
+            color: white;
+            text-align: center;
+          }
+          .player{
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            display: flex;
+            flex-direction: row;
+          }
+          .lyrics{
+            height: 70vh;
+            overflow: hidden;
+          }
+          p{
+            transform: translate(0, ${position}%);
+          }
+        `}</style>
     </>
     : null
 }

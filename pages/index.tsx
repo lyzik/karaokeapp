@@ -3,6 +3,11 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import Header from '@/components/Header/Header';
+const client_id : any  = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
+const redirect_uri = process.env.NEXT_PUBLIC_REDIRECT_URI;
+const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
+const redirect_auth = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}&scope=user-read-email,playlist-read-private,streaming,user-read-playback-state,user-modify-playback-state,app-remote-control,user-read-private,user-library-read,user-library-modify`
 
 export default function Home() {
   const {data: session} : any = useSession();
@@ -11,10 +16,10 @@ export default function Home() {
     fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
       headers: {
-        Authorization: `Basic MTk2YjRlYzE5YWQyNDE4ODk0NDBjY2QzNThkNTJlZGU6YmQzZTg4MDQ5YzJmNDAzMzliZjNmN2NjMjkyZjY4YWE=`,
+        Authorization: `Basic ${basic}`,
         "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: `grant_type=authorization_code&code=${new URLSearchParams(window.location.search).get('code')}&redirect_uri=http%3A%2F%2Flocalhost:3000`
+      body: `grant_type=authorization_code&code=${new URLSearchParams(window.location.search).get('code')}&redirect_uri=${redirect_uri}`
     })
       .then(response => response.json())
       .then(data => {
@@ -22,9 +27,8 @@ export default function Home() {
       })
   }, [])
 
-
   if(session && !Cookies.get('code')){
-    window.location.replace(`https://accounts.spotify.com/authorize?client_id=196b4ec19ad241889440ccd358d52ede&response_type=code&redirect_uri=http%3A%2F%2Flocalhost:3000&scope=user-read-email,playlist-read-private,streaming,user-read-playback-state,user-modify-playback-state,app-remote-control,user-read-private,user-library-read,user-library-modify`);
+    window.location.replace(redirect_auth);
   }
   
   if (session) {
