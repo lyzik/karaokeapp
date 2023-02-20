@@ -21,6 +21,7 @@ const Search = () => {
   };
 
   useEffect(() => {
+    if(input){
     const timeout = setTimeout(() => {
       fetch(`/api/search?q=${input}`)
       .then(res => res.json())
@@ -28,6 +29,13 @@ const Search = () => {
     }, 800)
 
     return () => clearTimeout(timeout)
+    }else{
+      const timeout = setTimeout(() => {
+        fetch(`/api/favorites`)
+        .then(res => res.json())
+        .then(data => setTracks({tracks: data}))
+      }, 800)
+    }
   }, [input]);
 
   const handleChange = (event: any) => {
@@ -62,7 +70,6 @@ const Search = () => {
           </>
       )) : null}
     </div>
-
     <style jsx>{`
         .input-container{
           width: 100%;
