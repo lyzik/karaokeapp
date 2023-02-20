@@ -1,6 +1,7 @@
 import EndWindow from "@/components/EndWindow/EndWindow";
 import Header from "@/components/Header/Header";
 import { Player } from "@/components/Player/Player";
+import Head from "next/head";
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react";
 
@@ -21,9 +22,9 @@ const SongData = () => {
 
     useEffect(() => {
       function handleKeyDown(event : any) {
-        if (event.key === 'ArrowDown') {
+        if (event.key === 'ArrowUp') {
           speed.current += 0.1
-        }else if (event.key === 'ArrowUp') {
+        }else if (event.key === 'ArrowDown') {
           speed.current -= 0.1
         }
       }
@@ -41,7 +42,7 @@ const SongData = () => {
     useEffect(() => {
         if(isPlaying){
             const intervalId = setInterval(() => {
-            setPosition(position - ((audioFeatures.speechiness * 10) / speed.current));
+            setPosition(position - ((audioFeatures.speechiness * 10) * speed.current));
             }, 10);
             
             return () => clearInterval(intervalId);
@@ -71,6 +72,9 @@ const SongData = () => {
 
     return fetched && trackData ? 
     <div>
+        <Head>
+          <title>{trackData.name}</title>
+        </Head>
         <Header />
         {nextTracks.tracks && nextSongPopup ? <EndWindow nextTracks={nextTracks}/> : null}
         <h1>{trackData.name}</h1> 

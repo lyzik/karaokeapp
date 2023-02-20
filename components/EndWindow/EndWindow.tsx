@@ -1,11 +1,23 @@
-import Link from 'next/link'
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 
 export default function EndWindow(props : any) {
     const [tracks, setTracks] : any = useState(props.nextTracks.tracks)
+    const [timer, setTimer] : any = useState(10)
     const router = useRouter();
-    
+
+    useEffect(() => {
+        if(timer > 0){
+            const intervalId = setInterval(() => {
+            setTimer(timer - 1);
+            }, 1000);
+            
+            return () => clearInterval(intervalId);
+        }else{
+            window.location.replace(`/track/${tracks[0].id}`);
+        }
+    }, [timer])
+
     useEffect(() => {
         console.log(tracks)
     },[tracks])
@@ -25,6 +37,8 @@ export default function EndWindow(props : any) {
                 </div>
             )) : null}
             </div>
+            <p>Next song in: {timer}</p>
+            <button onClick={() => router.push(`/`)}>Go to main page</button>
             <button onClick={() => window.location.reload()}>Replay</button>
         </div>
 
@@ -38,9 +52,9 @@ export default function EndWindow(props : any) {
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: 90%;
-                height: 80%;
-                background-color: rgba(65, 8, 112, 0.6);
+                width: 97%;
+                height: 97%;
+                background-color: rgba(65, 8, 112, 0.85);
                 z-index: 3;
                 border-radius: 15px;
                 transition: opacity 1.5s;
@@ -85,6 +99,8 @@ export default function EndWindow(props : any) {
                 border: none;
                 height: 45px;
                 border-radius: 15px;
+                padding: 10px;
+                margin: 5px;
             }
             button:hover{
                 background-color: rgba(0, 0, 0, 0.3);
