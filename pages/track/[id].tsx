@@ -1,7 +1,8 @@
+import EndWindow from "@/components/EndWindow/EndWindow";
 import Header from "@/components/Header/Header";
 import { Player } from "@/components/Player/Player";
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 const SongData = () => {
@@ -10,15 +11,37 @@ const SongData = () => {
     const [lyrics, setLyrics] : any = useState();
     const {id} = router.query
     const [fetched, setFetched] = useState(false)
-    const [position, setPosition] : any = useState(2400)
+    const [position, setPosition] : any = useState(2000)
+    let speed : any = useRef(1.1) // Less = Faster
     const [isPlaying, setIsPlaying] : any = useState()
+    const [songState, setSongState] : any = useState()
+    const [audioFeatures, setAudioFeatures] : any = useState();
+    const [nextTracks, setNextTracks] : any = useState();
+    const [nextSongPopup, setNextSongPopup] : any = useState(false);
 
+    useEffect(() => {
+      function handleKeyDown(event : any) {
+        if (event.key === 'ArrowDown') {
+          speed.current += 0.1
+        }else if (event.key === 'ArrowUp') {
+          speed.current -= 0.1
+        }
+      }
+      document.addEventListener('keydown', handleKeyDown);
+  
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, []);
+
+    useEffect(() => {
+      if (songState && songState.previousTracks.length) setNextSongPopup(true)
+    }, [songState])
 
     useEffect(() => {
         if(isPlaying){
             const intervalId = setInterval(() => {
-            console.log();
-            setPosition(position - 1,14);
+            setPosition(position - ((audioFeatures.speechiness * 10) / speed.current));
             }, 10);
             
             return () => clearInterval(intervalId);
@@ -36,11 +59,20 @@ const SongData = () => {
             .then(data => setTrackData(data))
             .then(() => trackData !== undefined ? setFetched(true) : null)
         }
+
+        fetch(`http://localhost:3000/api/audioanalysis?q=${id}`)
+        .then(res => res.json())
+        .then(data => setAudioFeatures(data))
+
+        fetch(`http://localhost:3000/api/recommended?q=${id}`)
+        .then(res => res.json())
+        .then(data => setNextTracks(data))
     }, [trackData, id])
 
     return fetched && trackData ? 
-    <>
+    <div>
         <Header />
+        {nextTracks.tracks && nextSongPopup ? <EndWindow nextTracks={nextTracks}/> : null}
         <h1>{trackData.name}</h1> 
         <h2>{trackData.artists[0].name}</h2>
         <div className="lyrics">
@@ -49,9 +81,10 @@ const SongData = () => {
             )) : null}
         </div>
 
+        {!nextSongPopup ? 
         <div className="player">
-            <Player song={trackData.uri} setPlay={setIsPlaying}/>
-        </div>
+            <Player song={trackData.uri} setPlay={setIsPlaying} setSongState={setSongState}/>
+        </div> : null}
         
         <style jsx>{`
           h1{
@@ -79,7 +112,7 @@ const SongData = () => {
             transform: translate(0, ${position}%);
           }
         `}</style>
-    </>
+    </div>
     : null
 }
 

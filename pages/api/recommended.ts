@@ -5,7 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 const handler = async (req : NextApiRequest, res : NextApiResponse) => {
   const {token: {accessToken}} : any = await getSession({req});
   const query = req.query?.q;
-  const response = await getTrack(accessToken, `https://api.spotify.com/v1/audio-features/${query}`);
+  const response = await getTrack(accessToken, `https://api.spotify.com/v1/recommendations?limit=3&seed_tracks=${query}`);
   const track = await response.json();
 
   return res.status(200).json(track);

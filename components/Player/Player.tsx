@@ -16,8 +16,8 @@ export const Player = (props : any) => {
             initialVolume={0.5}
             callback={
                 state => {
-                    console.log(state.isPlaying);
                     props.setPlay(state.isPlaying)
+                    props.setSongState(state)
                 }
             }
             styles={{
