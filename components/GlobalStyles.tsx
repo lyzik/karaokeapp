@@ -8,6 +8,7 @@ export default function GlobalStyles() {
             background: linear-gradient(0deg, rgba(49,3,87,1) 0%, rgba(42,42,130,1) 69%);
             background-attachment: fixed;
             font-family: 'Montserrat', sans-serif;
+            margin: 0;
         }
       `}</style>
   )

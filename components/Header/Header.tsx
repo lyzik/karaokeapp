@@ -8,7 +8,7 @@ export default function Header() {
     <header>
         <div className='user-data'>
         <span>{session?.token?.name}</span>
-        <button onClick={() => signOut()}>Sign out</button>
+        <button onClick={() => {signOut()}}>Sign out</button>
         </div>
 
         <style jsx>{`

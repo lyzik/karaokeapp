@@ -23,6 +23,8 @@ export const Player = (props : any) => {
             styles={{
                 color: 'black',
                 bgColor: 'white',
+                sliderHeight: 0,
+                sliderHandleColor: 'transparent',
             }}
         />
     </>

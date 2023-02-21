@@ -3,6 +3,8 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import Header from '@/components/Header/Header';
+import Image from 'next/image';
+import logo from '../public/logo.png'
 const client_id : any  = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
 const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
 const redirect_uri = process.env.NEXT_PUBLIC_REDIRECT_URI;
@@ -42,8 +44,48 @@ export default function Home() {
   }
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <div className='main'>
+        <div className='left'>
+          <div>
+            <h2>You have to connect spotify with app</h2>
+            <h3>Login to spotify, and start now</h3>
+          </div>
+          <button onClick={() => signIn()}>Sign in</button>
+        </div>
+        <div className='right'>
+          <Image src={logo} alt="logo" className='logo' style={{width: '100%', height: '100%'}}/>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .main{
+          color: white;
+          display: flex;
+          width: 100%;
+        }
+        .left{
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .right{
+          width: 50%;
+        }
+        button{
+          padding: 5px 20px 5px 20px;
+          border: white 1px solid;
+          background-color: white;
+          border-radius: 50px;
+          transition: 0.3s;
+        }
+        button:hover{
+          background-color: transparent;
+          color: white;
+          transition: 0.3s;
+        }
+      `}</style>
     </>
   );
 }

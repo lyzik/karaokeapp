@@ -1,6 +1,7 @@
 import EndWindow from "@/components/EndWindow/EndWindow";
 import Header from "@/components/Header/Header";
 import { Player } from "@/components/Player/Player";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +20,7 @@ const SongData = () => {
     const [audioFeatures, setAudioFeatures] : any = useState();
     const [nextTracks, setNextTracks] : any = useState();
     const [nextSongPopup, setNextSongPopup] : any = useState(false);
+    const {data: session} : any = useSession();
 
     useEffect(() => {
       function handleKeyDown(event : any) {
@@ -70,13 +72,14 @@ const SongData = () => {
         .then(data => setNextTracks(data))
     }, [trackData, id])
 
+    if(session){
     return fetched && trackData ? 
     <div>
         <Head>
           <title>{trackData.name}</title>
         </Head>
         <Header />
-        {nextTracks.tracks && nextSongPopup ? <EndWindow nextTracks={nextTracks}/> : null}
+        {nextTracks != undefined && nextSongPopup ? <EndWindow nextTracks={nextTracks}/> : null}
         <h1>{trackData.name}</h1> 
         <h2>{trackData.artists[0].name}</h2>
         <div className="lyrics">
@@ -87,7 +90,7 @@ const SongData = () => {
 
         {!nextSongPopup ? 
         <div className="player">
-            <Player song={trackData.uri} setPlay={setIsPlaying} setSongState={setSongState}/>
+            <Player song={trackData.uri} setPlay={setIsPlaying} setSongState={setSongState} />
         </div> : null}
         
         <style jsx>{`
@@ -118,6 +121,31 @@ const SongData = () => {
         `}</style>
     </div>
     : null
+    } else {
+      return <>
+        <div>
+          <h1>You are not logged in</h1>
+          <h2><a href="/">click to go to main page</a></h2>
+        </div>
+
+        <style jsx>{`
+          div{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+          } 
+          a{
+            color: white;
+          }
+          a:hover{
+            color: gray;
+          }
+        `}
+        </style>
+      </>
+    }
 }
 
 export default SongData
