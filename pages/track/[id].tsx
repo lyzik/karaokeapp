@@ -21,6 +21,7 @@ const SongData = () => {
     const [nextTracks, setNextTracks] : any = useState();
     const [nextSongPopup, setNextSongPopup] : any = useState(false);
     const {data: session} : any = useSession();
+    const redirect_uri = process.env.NEXT_PUBLIC_REDIRECT_URI;
 
     useEffect(() => {
       function handleKeyDown(event : any) {
@@ -53,21 +54,21 @@ const SongData = () => {
 
     useEffect(() => {
         if(fetched){
-        fetch(`/api/lyrics?artist=${trackData.artists[0].name}&title=${trackData.name}`)
+        fetch(`${redirect_uri}/api/lyrics?artist=${trackData.artists[0].name}&title=${trackData.name}`)
         .then(res => res.json())
         .then(data => setLyrics(data.split('\n')))
         } else {
-            fetch(`/api/track?q=${id}`)
+            fetch(`${redirect_uri}/api/track?q=${id}`)
             .then(res => res.json())
             .then(data => setTrackData(data))
             .then(() => trackData !== undefined ? setFetched(true) : null)
         }
 
-        fetch(`/api/audioanalysis?q=${id}`)
+        fetch(`${redirect_uri}/api/audioanalysis?q=${id}`)
         .then(res => res.json())
         .then(data => setAudioFeatures(data))
 
-        fetch(`/api/recommended?q=${id}`)
+        fetch(`${redirect_uri}/api/recommended?q=${id}`)
         .then(res => res.json())
         .then(data => setNextTracks(data))
     }, [trackData, id])
