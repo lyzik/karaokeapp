@@ -58,10 +58,16 @@ export default function Home() {
       </div>
 
       <style jsx>{`
+        @keyframes fadein {
+            from { opacity: 0}
+            to   { opacity: 1}
+        }
         .main{
           color: white;
           display: flex;
           width: 100%;
+          transition: opacity 1.5s;
+          animation: fadein 3s;
         }
         .left{
           width: 50%;
