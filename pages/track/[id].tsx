@@ -53,7 +53,7 @@ const SongData = () => {
 
     useEffect(() => {
         if(fetched){
-        fetch(`http://localhost:3000/api/lyrics?artist=${trackData.artists[0].name}&title=${trackData.name}`)
+        fetch(`/api/lyrics?artist=${trackData.artists[0].name}&title=${trackData.name}`)
         .then(res => res.json())
         .then(data => setLyrics(data.split('\n')))
         } else {
@@ -63,11 +63,11 @@ const SongData = () => {
             .then(() => trackData !== undefined ? setFetched(true) : null)
         }
 
-        fetch(`http://localhost:3000/api/audioanalysis?q=${id}`)
+        fetch(`/api/audioanalysis?q=${id}`)
         .then(res => res.json())
         .then(data => setAudioFeatures(data))
 
-        fetch(`http://localhost:3000/api/recommended?q=${id}`)
+        fetch(`/api/recommended?q=${id}`)
         .then(res => res.json())
         .then(data => setNextTracks(data))
     }, [trackData, id])
