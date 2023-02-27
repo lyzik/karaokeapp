@@ -62,7 +62,7 @@ const Search = () => {
                     play_arrow
                   </span>
                   </button>
-                  <button onClick={() => router.push(`/track/${el.id}`)} className='redirect-button'>
+                  <button onClick={() => {router.push(`/track/${el.id}`); playPreview("")}} className='redirect-button'>
                     Sing this track!
                   </button>
                 </div>
